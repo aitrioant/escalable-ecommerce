@@ -1,6 +1,7 @@
 package inMemoryUserRepository
 
 import (
+	"errors"
 	"sync"
 	user "users/Domain/Model"
 )
@@ -27,9 +28,13 @@ func NewUserRepository() *UserRepository {
 	}
 }
 
-func (m UserRepository) GetUser(id string) (*user.User, bool) {
-	user, error := m.users[id]
-	return &user, error
+func (m UserRepository) GetUser(id string) (*user.User, error) {
+	user, ok := m.users[id]
+	if !ok {
+		return nil, errors.New("user not found")
+	}
+
+	return &user, nil
 }
 
 func (m UserRepository) GetUsers() map[string]user.User {

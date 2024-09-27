@@ -36,11 +36,11 @@ func GetUserByID(c *gin.Context) {
 
 	// Loop through the list of users, looking for
 	// an user whose ID value matches the parameter.
-	a, error := config.UserRepo.GetUser(id)
-	if !error {
-		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "user not found"})
+	user, err := config.UserRepo.GetUser(id)
+	if err != nil {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": err.Error()})
+		return
 	}
 
-	c.IndentedJSON(http.StatusOK, a)
-
+	c.IndentedJSON(http.StatusOK, user)
 }
