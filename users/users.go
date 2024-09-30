@@ -15,6 +15,7 @@ func main() {
 	router.GET("/users", controller.GetUsers)
 	router.GET("/users/:id", controller.GetUserByID)
 	router.POST("/users", controller.PostUsers)
+	router.DELETE("/users/:id", controller.DeleteUser)
 
-	router.Run("localhost:8080")
+	router.Run("0.0.0.0:8080")
 }

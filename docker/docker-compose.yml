@@ -1,0 +1,11 @@
+version: '3.8'  # Specify the Compose file format
+
+services:
+  users:
+    build:
+      context: ..  # Build from the current directory
+      dockerfile: users/docker/Dockerfile  # Specify the Dockerfile name
+    ports:
+      - "8080:8080"  # Map host port 8080 to container port 8080
+    environment:
+      - GO_ENV=production  # Example environment variable (optional)

@@ -47,3 +47,7 @@ func (m UserRepository) UpdateUser(user user.User) {
 
 	m.users[user.ID] = user
 }
+
+func (m UserRepository) DeleteUser(user user.User) {
+	delete(m.users, user.ID)
+}

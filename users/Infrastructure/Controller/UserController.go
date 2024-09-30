@@ -44,3 +44,19 @@ func GetUserByID(c *gin.Context) {
 
 	c.IndentedJSON(http.StatusOK, user)
 }
+
+func DeleteUser(c *gin.Context) {
+	id := c.Param("id")
+
+	// Loop through the list of users, looking for
+	// an user whose ID value matches the parameter.
+	user, err := config.UserRepo.GetUser(id)
+	if err != nil {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": err.Error()})
+		return
+	}
+
+	config.UserRepo.DeleteUser(*user)
+
+	c.IndentedJSON(http.StatusOK, user)
+}
