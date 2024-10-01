@@ -2,35 +2,38 @@ package main
 
 import (
 	"fmt"
-	"net/http"
-
-	"database/sql"
+	model "sellers/Domain/Model"
+	controller "sellers/Infrastructure/Controller"
+	"sellers/config"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
-var db *sql.DB
+func loadFixtures() {
+	config.DB.AutoMigrate(&model.Seller{})
+	config.DB.Create(model.SellersData)
 
-func helloWorld(c *gin.Context) {
-	fmt.Println("Hello World!")
-	c.IndentedJSON(http.StatusOK, "hello sellers")
 }
 
 func main() {
-	db = connectDB()
-	defer db.Close()
+	config.DB = connectDB()
 
+	// loadFixtures()
 	router := gin.Default()
 
-	router.GET("/sellers", helloWorld)
+	router.GET("/sellers/:id", controller.GetSellerById)
+	router.POST("/sellers", controller.PostSeller)
+	router.GET("/sellers/offers/:cardId", controller.GetOfferByCardId)
+	router.POST("/sellers/offers", controller.PostOffer)
 
 	router.Run("localhost:8081")
 }
 
-func connectDB() *sql.DB {
-	// Replace "username", "password", "dbname" with your database credentials
-	connectionString := "username:password@tcp(localhost:3306)/sellers"
-	db, err := sql.Open("mysql", connectionString)
+func connectDB() *gorm.DB {
+	dsn := "root:password@tcp(localhost:3306)/sellers"
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		fmt.Println(err)
 	}
